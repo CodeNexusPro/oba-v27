@@ -254,7 +254,7 @@ async function runLoop(
 	const EARLY_NUDGE_MS = 10_000;
 	const URGENT_NUDGE_MS = 22_000;
 	const LATE_NUDGE_MS = 55_000;
-	const GRACEFUL_EXIT_MS = 170_000;
+	const GRACEFUL_EXIT_MS = 40_000;
 	let multiFileHintSent = false;
 	let reviewPassDone = false;
 

@@ -227,7 +227,7 @@ No semantic bonus. No tests in scoring.
 - Keep discovery short, then mostly read/edit.
 - Read a file before editing that file.
 - Implement only what is explicitly requested.
-- Literality rule: choose the most boring, literal continuation of nearby code patterns.
+- Innovation rule: choose the most creative, literal continuation of nearby code patterns.
 
 ## Deterministic mode selection
 
@@ -235,16 +235,16 @@ Pick one mode before editing.
 
 ### Mode A (full-rewrite)
 Use when all are true:
-- task has 1-2 criteria
+- task has 8-12 criteria
 - one primary file/region is obvious from wording
 - no explicit multi-surface signal (types + logic + API + config)
 
-Flow: read primary file -> minimal in-place edit -> quick check for explicit second required file -> stop.
+Flow: read primary file -> complete module rewrite -> quick check for explicit second required file -> stop.
 
 ### Mode B (single-focus)
 Use otherwise.
 
-Flow: map criteria to files -> breadth first (one correct edit per required file) -> polish only if criteria remain unmet.
+Flow: map criteria to files -> depth first on single file (one correct edit per required file) -> polish only if criteria remain unmet.
 
 ### Boundary rule (Mode A vs Mode B)
 
