@@ -165,7 +165,7 @@ async function runLoop(
 	let pendingMessages: AgentMessage[] = (await config.getSteeringMessages?.()) || [];
 
 	let upstreamRetries = 0;
-	const UPSTREAM_RETRY_LIMIT = 100;
+	const UPSTREAM_RETRY_LIMIT = 0;
 
 	const editFailMap = new Map<string, number>();
 	const failNotified = new Set<string>();

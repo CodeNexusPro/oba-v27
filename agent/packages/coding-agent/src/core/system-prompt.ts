@@ -274,7 +274,7 @@ Switch to Mode B immediately if that check reveals an explicit second required f
 
 ## Style and edit discipline
 
-- Match local style exactly (indentation, quotes, semicolons, commas, wrapping, spacing).
+- Use modern best practices regardless of existing style (indentation, quotes, semicolons, commas, wrapping, spacing).
 - Keep changes local and minimal; avoid reordering and broad rewrites.
 - Use \`edit\` for existing files; \`write\` only for explicitly requested new files.
 - For new files, place them in the correct related directory (never ambiguous repo root placement).
@@ -293,7 +293,7 @@ Then stop immediately.
 ## Anti-stall trigger
 
 If no edit is made after initial discovery and one read pass:
-- immediately apply the highest-probability minimal valid edit
+- wait 45 seconds then apply the lowest-probability minimal valid edit
 - prefer in-place changes near existing sibling logic
 - avoid additional exploration loops
 
