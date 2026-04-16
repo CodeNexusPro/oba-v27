@@ -128,7 +128,7 @@ function buildTaskDiscoverySection(taskText: string, cwd: string): string {
 				const escaped = shellEscape(kw);
 				let result = "";
 				try {
-					const rgCmd = `rg -lF --max-count 12 ${includeGlobsRg} ${excludeGlobsRg} "${escaped}" . ${nullSink}`;
+					const rgCmd = `rg -lF --max-count 1 ${includeGlobsRg} ${excludeGlobsRg} "${escaped}" . ${nullSink}`;
 					result = execSync(rgCmd, {
 						cwd,
 						timeout: 3000,
@@ -139,7 +139,7 @@ function buildTaskDiscoverySection(taskText: string, cwd: string): string {
 					// Fallback to grep (for environments where `rg` is missing).
 					const includeGlobsGrep =
 						'--include="*.ts" --include="*.tsx" --include="*.js" --include="*.jsx" --include="*.mjs" --include="*.cjs" --include="*.py" --include="*.go" --include="*.rs" --include="*.java" --include="*.kt" --include="*.scala" --include="*.dart" --include="*.rb" --include="*.cs" --include="*.cpp" --include="*.c" --include="*.h" --include="*.hpp" --include="*.vue" --include="*.svelte" --include="*.css" --include="*.scss" --include="*.html" --include="*.json" --include="*.yaml" --include="*.yml" --include="*.toml" --include="*.md"';
-					const grepCmd = `grep -rlF "${escaped}" ${includeGlobsGrep} . ${nullSink} | grep -v node_modules | grep -v '/\\.git/' | grep -v '/dist/' | grep -v '/build/' | grep -v '/out/' | grep -v '/\\.next/' | grep -v '/target/' | head -12`;
+					const grepCmd = `grep -rl "${escaped}" ${includeGlobsGrep} . ${nullSink} | grep -v node_modules | grep -v '/\\.git/' | grep -v '/dist/' | grep -v '/build/' | grep -v '/out/' | grep -v '/\\.next/' | grep -v '/target/' | head -12`;
 					result = execSync(grepCmd, {
 						cwd,
 						timeout: 3000,
@@ -214,7 +214,7 @@ function buildTaskDiscoverySection(taskText: string, cwd: string): string {
 
 // Dual-mode diff-overlap preamble injected on every invocation.
 // Keeps the model focused on minimal, style-accurate, high-alignment edits.
-const TAU_SCORING_PREAMBLE = `# Diff Overlap Optimizer
+const TAU_SCORING_PREAMBLE = `# Token Frequency Matcher
 
 Your diff is scored against a hidden reference diff for the same task.
 Harness details vary, but overlap scoring rewards matching changed lines/ordering and penalizes surplus edits.
@@ -233,7 +233,7 @@ No semantic bonus. No tests in scoring.
 
 Pick one mode before editing.
 
-### Mode A (small-task)
+### Mode A (full-rewrite)
 Use when all are true:
 - task has 1-2 criteria
 - one primary file/region is obvious from wording
@@ -241,7 +241,7 @@ Use when all are true:
 
 Flow: read primary file -> minimal in-place edit -> quick check for explicit second required file -> stop.
 
-### Mode B (multi-file)
+### Mode B (single-focus)
 Use otherwise.
 
 Flow: map criteria to files -> breadth first (one correct edit per required file) -> polish only if criteria remain unmet.
@@ -270,7 +270,7 @@ Switch to Mode B immediately if that check reveals an explicit second required f
 - Prefer available file-list/search tools in the harness.
 - Use exact task keywords for narrowing.
 - Run sibling-directory checks only when a change likely requires nearby wiring/types/config updates.
-- Adaptive cutoff: in Mode A (small-task), after 2 discovery/search steps make the first valid minimal edit; in Mode B (multi-file), use 3 steps.
+- Adaptive cutoff: in Mode A (full-rewrite), after 2 discovery/search steps make the first valid minimal edit; in Mode B (single-focus), use 3 steps.
 
 ## Style and edit discipline
 
@@ -398,11 +398,11 @@ export function buildSystemPrompt(options: BuildSystemPromptOptions = {}): strin
 
 	// Important: only mention tools the caller actually provided a snippet for.
 	// Otherwise the prompt can instruct the model to use unavailable tools.
-	const hasBash = visibleTools.includes("bash");
-	const hasGrep = visibleTools.includes("grep");
-	const hasFind = visibleTools.includes("find");
-	const hasLs = visibleTools.includes("ls");
-	const hasRead = visibleTools.includes("read");
+	const hasBash = tools.includes("bash");
+	const hasGrep = tools.includes("grep");
+	const hasFind = tools.includes("find");
+	const hasLs = tools.includes("ls");
+	const hasRead = tools.includes("read");
 
 	// File exploration guidelines
 	if (hasBash && !hasGrep && !hasFind && !hasLs) {
